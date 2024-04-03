@@ -108,4 +108,5 @@ module.exports = {
 ```bash
 git commit -m "Mensaje de commit" -n
 ```
+
 # GymCopilot
