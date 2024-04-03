@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo -e "\n\nInicializando Husky...\n\n"
+
+echo -e "\n\n[HUSKY] >> Running Prettier..."
+
+prettier --check src/**/*.{ts,tsx,scss,css} --config ./.prettierrc
+
+echo -e "\n\n"
+
+echo "[HUSKY] >> Running lint-staged"
+
+npx lint-staged
+
+echo "[HUSKY] >> Running tests"
+
+npm run test run
+
+echo -e "\n\n[HUSKY] >> Checking console.log()"
+
+node scripts/checkConsoleLogs.js
+
+echo -e "\n\n"
+
+echo -e "[HUSKY] >> ¡ALL OK!"
+echo -e "[HUSKY] >> THANKS FOR KEEPING THE CODE CLEAN! 🧹🧼🧽🚿🛁🚽🚰🚮🧻🧺🧴🧽🧼🧹"
