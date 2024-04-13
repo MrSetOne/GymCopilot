@@ -10,9 +10,11 @@
     "preview": "vite preview",
     "format": "prettier --write . --config ./.prettierrc",
     "prepare": "husky && husky install",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" --fix --max-warnings 0"
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --fix --max-warnings 0",
+    "checkConsoleLogs": "node scripts/checkConsoleLogs.js"
   },
   "dependencies": {
+    "firebase": "^10.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.72.0"

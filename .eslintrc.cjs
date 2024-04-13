@@ -14,7 +14,6 @@ module.exports = {
     eqeqeq: ['error', 'always'],
     '@typescript-eslint/no-inferrable-types': 'off',
     'no-empty-function': 'error',
-    'no-unused-vars': 'error',
     'no-var': 'error',
     'prefer-const': 'warn',
   },
