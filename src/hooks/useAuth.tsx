@@ -1,7 +1,12 @@
+import { useContext } from 'react'
 import { auth, googleProvider } from '../services/Firebase'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { AuthContext } from '../context/UserContext/AuthState'
+import { IAuthContext } from '../context/UserContext/AuthTypes'
 
 const useAuth = () => {
+  const { logIn, logOut: contextLogOut } = useContext(AuthContext) as IAuthContext
+
   const loginWithGoogle = () => {
     signInWithPopup(auth, googleProvider)
       .then((result) => {
@@ -9,9 +14,18 @@ const useAuth = () => {
 
         if (!credential) return
 
-        // const token = credential.accessToken
-        // const user = result.user
-        // const userData = getAdditionalUserInfo(result)
+        const token = credential.accessToken as string
+        const { uid: id, email, displayName: name, photoURL: picture } = result.user
+
+        logIn({
+          token,
+          id,
+          email,
+          name,
+          picture,
+        })
+
+        // If you need more info you can call the function getAdditionalUserInfo(result)
       })
       .catch((error) => {
         console.error(error)
@@ -25,7 +39,10 @@ const useAuth = () => {
         // ...
       })
   }
-  return { loginWithGoogle }
+
+  const logOut = () => contextLogOut()
+
+  return { loginWithGoogle, logOut }
 }
 
 export default useAuth

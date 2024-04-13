@@ -89,7 +89,7 @@ module.exports = {
   ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules', 'package.json'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
-  rules: {
+  rules: {:
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     eqeqeq: ['error', 'always'],
     '@typescript-eslint/no-inferrable-types': 'off',
