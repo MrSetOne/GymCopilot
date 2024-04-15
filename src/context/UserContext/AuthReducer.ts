@@ -1,3 +1,4 @@
+import { cleanUser } from './AuthHolders'
 import { IAction, IAuthData } from './AuthTypes'
 
 type TAuthReducer = (state: IAuthData, action: IAction) => IAuthData
@@ -11,10 +12,7 @@ const authReducer: TAuthReducer = (state, action) => {
       }
 
     case 'LOGOUT':
-      return {
-        ...state,
-        ...action.payload,
-      }
+      return cleanUser
     default:
       return state
   }
