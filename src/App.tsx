@@ -1,14 +1,12 @@
 import './App.scss'
 import { AuthProvider } from './context/UserContext/AuthState'
-import Login from './pages/Login'
+import Router from './routes/Router'
 
 function App() {
   return (
-    <>
-      <AuthProvider>
-        <Login />
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <Router />
+    </AuthProvider>
   )
 }
 

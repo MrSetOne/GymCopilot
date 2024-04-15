@@ -1,11 +1,11 @@
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import { auth, googleProvider } from '../services/Firebase'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { AuthContext } from '../context/UserContext/AuthState'
 import { IAuthContext } from '../context/UserContext/AuthTypes'
 
 const useAuth = () => {
-  const { logIn, logOut: contextLogOut } = useContext(AuthContext) as IAuthContext
+  const { logIn, logOut: contextLogOut, user } = useContext(AuthContext) as IAuthContext
 
   const loginWithGoogle = () => {
     signInWithPopup(auth, googleProvider)
@@ -42,7 +42,12 @@ const useAuth = () => {
 
   const logOut = () => contextLogOut()
 
-  return { loginWithGoogle, logOut }
+  const isLogged = useMemo(
+    () => user.email && user.id && user.name && user.picture && user.token,
+    [user],
+  )
+
+  return { loginWithGoogle, logOut, isLogged }
 }
 
 export default useAuth
