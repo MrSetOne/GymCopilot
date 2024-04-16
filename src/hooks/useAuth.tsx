@@ -1,32 +1,46 @@
-import { useContext } from 'react'
+import { useContext, useMemo } from 'react'
 import { auth, googleProvider } from '../services/Firebase'
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import {
+  UserCredential,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from 'firebase/auth'
 import { AuthContext } from '../context/UserContext/AuthState'
 import { IAuthContext } from '../context/UserContext/AuthTypes'
+import { parseFirebaseUser } from '../context/UserContext/AuthHolders'
 
 const useAuth = () => {
-  const { logIn, logOut: contextLogOut } = useContext(AuthContext) as IAuthContext
+  const { logIn, logOut: contextLogOut, user } = useContext(AuthContext) as IAuthContext
+
+  const _doALogin = async (userCredential: UserCredential) => {
+    const parsedUser = await parseFirebaseUser(userCredential)
+    logIn(parsedUser)
+  }
+
+  const signUpWithEmail = (email: string, password: string) => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(_doALogin)
+      .catch((error) => {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.error(errorCode, errorMessage)
+      })
+  }
+
+  const loginWithEmail = (email: string, password: string) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then(_doALogin)
+      .catch((error) => {
+        const errorCode = error.code
+        const errorMessage = error.message
+        console.error(errorCode, errorMessage)
+      })
+  }
 
   const loginWithGoogle = () => {
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result)
-
-        if (!credential) return
-
-        const token = credential.accessToken as string
-        const { uid: id, email, displayName: name, photoURL: picture } = result.user
-
-        logIn({
-          token,
-          id,
-          email,
-          name,
-          picture,
-        })
-
-        // If you need more info you can call the function getAdditionalUserInfo(result)
-      })
+      .then(_doALogin)
       .catch((error) => {
         console.error(error)
         // Handle Errors here.
@@ -42,7 +56,9 @@ const useAuth = () => {
 
   const logOut = () => contextLogOut()
 
-  return { loginWithGoogle, logOut }
+  const isLogged = useMemo(() => user.email && user.id && user.token, [user])
+
+  return { loginWithGoogle, logOut, isLogged, signUpWithEmail, loginWithEmail }
 }
 
 export default useAuth
